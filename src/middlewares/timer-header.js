@@ -8,4 +8,9 @@ module.exports = () => {
     ctx.set('X-Response-Time', delta + 'ms');
   };
 };
-/** This middleware must now be added to the config middleware array */
+/** This middleware must now be added to the config middleware array 
+ *  The scope must be specified and the name must be specifed.Usually the name 
+ * is the filename
+ * eg: global::timer-header as a global middleware
+ * 
+*/
