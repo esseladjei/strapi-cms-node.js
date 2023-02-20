@@ -7,7 +7,7 @@
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
 module.exports = createCoreRouter('api::post.post'/** This is a way to customise a core existing route */,{
-  prefix:'', //tags => /test/post
+/*   prefix:'', //tags => /test/post
   only:['find'] ,// allows you to specify which methods you want to include
   except:[],
   config:{
@@ -20,5 +20,5 @@ module.exports = createCoreRouter('api::post.post'/** This is a way to customise
     create:{},
     update:{},
     delete:{}
-  }
+  } */
 });
