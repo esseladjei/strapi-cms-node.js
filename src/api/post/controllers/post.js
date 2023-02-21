@@ -18,6 +18,7 @@ module.exports = createCoreController('api::post.post', ({ strapi }) => ({
    
   // Method 1: Creating an entirely custom action
   async exampleAction(ctx) {
+    await strapi.service("api::post.post").exampleService('some parameter','another parameter') // calling the cost service
     try {
       ctx.body = 'ok';
     } catch (err) {
