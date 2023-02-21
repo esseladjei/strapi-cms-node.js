@@ -100,6 +100,20 @@ module.exports = createCoreController('api::post.post', ({ strapi }) => ({
       const sanitizedPremiumPost=await this.sanitizeOutput(premiumPost,ctx);
 
     return this.transformResponse(sanitizedPremiumPost);
+  },
+  async findOnePremium(ctx){ //should be called with a custom route
+    if(ctx.state.user) return await super.findOne(ctx)
+    const {id}=ctx.params
+    const {query}=ctx
+    const postIfPublic= await strapi
+    .service("api::post.post")
+    .findOneIfPremium({
+      id,
+      query
+    });
+   const sanitizedPostIfPublic=await this.sanitizeOutput(postIfPublic, ctx);
+   return this.transformResponse(sanitizedPostIfPublic)
   }
+
 }));
 
