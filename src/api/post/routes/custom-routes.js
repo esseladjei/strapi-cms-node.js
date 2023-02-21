@@ -1,12 +1,12 @@
 module.exports={
   routes:[
-    /* {
+     {
       method:"GET",
-      path:"/post/example",
-      handler:"post.findByName",
+      path:"/posts/example",
+      handler:"api::post.post.exampleAction",
       config:{
         //some configuration
       }
-    }*/
+    }
   ]
 } 
