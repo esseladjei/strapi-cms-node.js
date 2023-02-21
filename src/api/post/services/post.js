@@ -42,6 +42,17 @@ module.exports = createCoreService('api::post.post',({ strapi }) =>  ({
   // Method 3: Replacing a core service
   async findOne(entityId, params = {}) {
     return strapi.entityService.findOne('api::post.post', entityId, this.getFetchParams(params));
+  },
+
+  async findPremium(args){
+    const newQuery={
+      ...args,
+      filters:{
+        ...args.filters,
+        premium:false
+      }
+    }
+    return strapi.entityService.findMany('api::post.post', this.getFetchParams(newQuery))
   }
 }));
 
