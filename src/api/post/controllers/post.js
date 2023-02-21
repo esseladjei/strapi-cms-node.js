@@ -25,6 +25,8 @@ module.exports = createCoreController('api::post.post', ({ strapi }) => ({
     }
   },
 
+  /*  temporarily commented out to use another find method
+
   // Method 2: Wrapping a core action (leaves core logic in place)
   async find(ctx) {
     // some custom logic here
@@ -35,9 +37,8 @@ module.exports = createCoreController('api::post.post', ({ strapi }) => ({
 
     // some more custom logic
     meta.date = Date.now();
-    console.log(ctx.query)
     return { data, meta };
-  },
+  }, */
 
   // Method 3: Replacing a core action
   async findOne(ctx) { '/posts/:id /posts/1?....'
@@ -50,5 +51,54 @@ module.exports = createCoreController('api::post.post', ({ strapi }) => ({
 
     return this.transformResponse(sanitizedEntity);
   },
+
+  //some business logic examples for fetching premium post
+
+/*  Solution 1
+ async find(ctx){
+    //fetch all post and filter them afterwards if user is authenticated 
+    //return data if not return filtered out data that are not premium
+    const {data,meta}=await super.find(ctx);
+    if(ctx.state.user) return {data, meta}
+    
+    //not authenticated
+    const filteredData=data.filter((post)=> !post.attribute.premium)
+    return {data: filteredData, meta}
+
+  } */
+
+  
+  /*
+  Solution 2
+  making use of the service find and sanitize and transformResponse
+  async find(ctx){
+    //if the current request is authenticated
+    const isRequestingNonPremuim= ctx.query.filters && ctx.query.filters.premium===false
+    if(ctx.state.user || isRequestingNonPremuim) return await super.find(ctx);
+
+    //if the request is public, let's call the underlying service with additional filter param: premium==false
+    // /post?filters[premium]=false
+    const filteredPost =await strapi.service("api::post.post").find({
+      filters:{
+        premium:false
+      }
+    })
+  } */
+
+  /**
+   * Solution 3
+   * making use of a dedicated service to findAllPremium Post and calling it inside the controller
+   * thereby removing business logic from the controller
+   */
+  async find(ctx){
+    const isRequestingNonPremuim= ctx.query.filters && ctx.query.filters.premium===false
+    if(ctx.state.user || isRequestingNonPremuim) return await super.find(ctx);
+
+    const premiumPost= await strapi.service("api::post.post").findPremium(ctx.query)
+  
+      const sanitizedPremiumPost=await this.sanitizeOutput(premiumPost,ctx);
+
+    return this.transformResponse(sanitizedPremiumPost);
+  }
 }));
 
