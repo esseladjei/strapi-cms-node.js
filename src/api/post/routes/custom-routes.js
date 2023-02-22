@@ -1,12 +1,20 @@
 module.exports={
   routes:[
-    /* {
+     {
       method:"GET",
-      path:"/post/example",
-      handler:"post.findByName",
+      path:"/posts/example",
+      handler:"api::post.post.exampleAction",
       config:{
         //some configuration
       }
-    }*/
+    },
+    {
+      method:"GET",
+      path:"/posts/getonepremium/:id",
+      handler:"api::post.post.findOnePremium",
+      config:{
+        auth:false
+      }
+    } 
   ]
 } 
