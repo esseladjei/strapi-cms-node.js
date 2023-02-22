@@ -7,6 +7,14 @@ module.exports={
       config:{
         //some configuration
       }
-    }
+    },
+    {
+      method:"GET",
+      path:"/posts/getonepremium/:id",
+      handler:"api::post.post.findOnePremium",
+      config:{
+        auth:false
+      }
+    } 
   ]
 } 
