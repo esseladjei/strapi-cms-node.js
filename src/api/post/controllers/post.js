@@ -3,7 +3,7 @@
 /**
  * post controller
  */
-
+const strapUtilsErrors = require('@strapi/utils').errors
 const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::post.post', ({ strapi }) => ({
@@ -113,7 +113,20 @@ module.exports = createCoreController('api::post.post', ({ strapi }) => ({
     });
    const sanitizedPostIfPublic=await this.sanitizeOutput(postIfPublic, ctx);
    return this.transformResponse(sanitizedPostIfPublic)
+  },
+  //create a new controller for the likePost
+  async likePost(ctx){
+    if(!ctx.state.user)  throw new strapUtilsErrors.ApplicationError('No authenticated user found')
+    const {user}=ctx.state;
+    const {id:postId}=ctx.params;
+    const {query}=ctx; //return populated results populate[0]=likedBy
+    const updatedPost= await strapi.service('api::post.post').likePost({
+      postId,
+      userId:user.id,
+      query
+    })
+    const sanitizedEntity=await this.sanitizeOutput(updatedPost,ctx);// the likeBy might not be returned if the user is not allowed to access that relation
+    return this.transformResponse(sanitizedEntity)
   }
-
 }));
 
