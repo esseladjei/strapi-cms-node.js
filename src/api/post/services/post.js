@@ -59,6 +59,23 @@ module.exports = createCoreService('api::post.post',({ strapi }) =>  ({
     const post = await strapi.entityService.findOne('api::post.post', id, this.getFetchParams(query))
     return post.premium ?  post : null
  
+  },
+
+  async likePost(args){
+    const {postId, userId,query}=args;
+    //use the underlying entity service API to fetch the post and it's likedBy property
+    const postToLike= await strapi.entityService.findOne("api::post.post", postId,{
+      populate:['likedBy'] //note by default strapi does not include relations or complex dataStrutures, so we need to state it.
+    })
+    
+    //use the underlying entity service API to update the current post with the new relation
+    const updatedPost=await strapi.entityService.update("api::post.post",postId,{
+      data:{
+        likedBy:[...postToLike.likedBy,userId],
+      },
+      ...query //include all the query params that are included like populating some specific fields
+    })
+    return updatedPost
   }
 
 }));
