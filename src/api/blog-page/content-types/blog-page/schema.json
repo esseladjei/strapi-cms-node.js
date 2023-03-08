@@ -4,7 +4,8 @@
   "info": {
     "singularName": "blog-page",
     "pluralName": "blog-pages",
-    "displayName": "BlogPage"
+    "displayName": "BlogPage",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -29,6 +30,14 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::tag.tag"
+    },
+    "dyn": {
+      "type": "dynamiczone",
+      "components": [
+        "blog.post-selection",
+        "layout.feature-course",
+        "config.social-link"
+      ]
     }
   }
 }
